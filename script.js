@@ -122,12 +122,11 @@ document.addEventListener("DOMContentLoaded", function() {
         })
     })
 
-    // When equal button clicked, evaluate operation if valid
     equalSign = document.querySelector('.eq');
     equalSign.addEventListener('click', () => {
+        // Evaluate operation if valid
         if (currentEntry && num1 !== '') {
             evaluateAndDisplay();
-
             previousEntry = equalSign.value;
             currentEntry = '';
             toggleOffOperators();
