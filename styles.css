@@ -95,6 +95,7 @@ h1 {
     font-size: 4em;
     height: 4rem;
     font-weight: 700;
+    overflow:hidden;
 }
 
 .all-btns {
@@ -119,6 +120,14 @@ h1 {
     grid-template-columns: 1fr 1fr 1fr;
 }
 
+.calc .special {
+    filter: brightness(130%);
+}
+
+.calc .special:hover {
+    filter: brightness(130%);
+}
+
 .calc input {
     font-size: 3em;
     margin: 0.3rem;
@@ -130,12 +139,18 @@ h1 {
     box-shadow: 0px 0px 4px rgba(0, 0, 0, 0.6);
 }
 
+
+
 .calc input:hover {
     filter: brightness(85%);
 }
 
 .calc input:active {
-    transform: scale(0.95)
+    transform: scale(0.95);
+}
+
+.btn-ops .ops:active {
+    filter: brightness(130%);
 }
 
 .btn-ops {
