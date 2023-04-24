@@ -14,14 +14,6 @@
     }
 }
 
-@media screen and (max-width: 500px) {
-    .calc {
-        transform-origin: top;
-        transform: scale(0.7);
-        transition-duration: 1s;
-    }
-}
-
 :root {
     --main-bg-color: #1A5F7A;
     --calc-color: #569DAA;
@@ -64,7 +56,7 @@ h1 {
     color: var(--word-color);
     border: 3px solid var(--word-color);
     border-radius: 1rem;
-    min-width: 20rem;
+    min-width: 22rem;
     max-width: 35rem;
     padding: 1rem;
     padding-bottom: 2.5rem;
@@ -96,6 +88,7 @@ h1 {
     height: 4rem;
     font-weight: 700;
     overflow:hidden;
+    word-wrap: break-word;
 }
 
 .all-btns {

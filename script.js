@@ -1,6 +1,7 @@
 let previousEntry = operator = null
 let currentEntry = num1 = num2 = ''
 let mainDisplay, smallDisplay
+const maxDisplayCharacters = 17
 
 // Mathematical Operations
 const add = (a, b) => (a + b);
@@ -23,11 +24,18 @@ let ops = {
 }
 
 
+// Feature to toggle off all operator buttons
+function toggleOffOperators() {
+    operators.forEach(e => e.classList.remove('special'))
+}
+
+
 // Feature for "AC" button
 function resetCalculator() {
     currentEntry = num1 = num2 = ''
     previousEntry = operator = null
     mainDisplay.textContent = smallDisplay.textContent = ''
+    toggleOffOperators()
 }
 
 
@@ -45,6 +53,16 @@ function evaluateAndDisplay() {
     // Evaluate the Calculation
     num2 = Number(currentEntry);
     let currentSolution = operate(num1, num2, ops[operator]);
+    
+    // Handle overflow of results when there is a floating point
+    if (currentSolution.toString().length > maxDisplayCharacters) {
+        currentSolution = currentSolution.toString();
+        let beforeDecimalCount = currentSolution.split('.')[0].length;
+        if (currentSolution.includes('.') && beforeDecimalCount < maxDisplayCharacters) {
+            let decimalLength = maxDisplayCharacters - 1 - beforeDecimalCount;
+            currentSolution = +Number(currentSolution).toFixed(decimalLength);
+        }
+    }
 
     // Display Calculation
     mainDisplay.textContent = currentSolution;
@@ -65,25 +83,30 @@ document.addEventListener("DOMContentLoaded", function() {
     numbers.forEach(e => {
         e.addEventListener('click', () => {
 
-            // Stop user from keying more than 2 decimal places,
-            // Display ongoing operation to user (e.g. 5+)
             if (e.value === '.' && currentEntry.includes('.')) {
+            // Stop user from keying more than 2 decimal places,
                 return;
+                
             } else if (previousEntry in ops && num1 !== '') {
+            // Display ongoing operation to user (e.g. 5+)
                 smallDisplay.textContent = num1 + operator;
+                
             } else if (previousEntry == '=') {
+            // Start a new operation
                 num1 = '';
+                smallDisplay.textContent = '';
             }
+
             previousEntry = e.value;
             currentEntry += e.value;
             mainDisplay.textContent = currentEntry;
         })
     });
 
-    // When operators clicked, record num1 or evaluate operation if valid
     operators = document.querySelectorAll('.ops');
     operators.forEach(e => {
         e.addEventListener('click', () => {
+            // Record first operand or evaluate operation if valid
             if (currentEntry) {
                 if (num1 === '') {
                     num1 = Number(currentEntry);
@@ -91,9 +114,10 @@ document.addEventListener("DOMContentLoaded", function() {
                     evaluateAndDisplay();
                 }
             }
+
             previousEntry = operator = e.value;
             currentEntry = '';
-            operators.forEach(e => e.classList.remove('special'))
+            toggleOffOperators();
             e.classList.add('special');
         })
     })
@@ -103,9 +127,10 @@ document.addEventListener("DOMContentLoaded", function() {
     equalSign.addEventListener('click', () => {
         if (currentEntry && num1 !== '') {
             evaluateAndDisplay();
+
             previousEntry = equalSign.value;
             currentEntry = '';
-            operators.forEach(e => e.classList.remove('special'))
+            toggleOffOperators();
         }
     })
 
@@ -114,5 +139,4 @@ document.addEventListener("DOMContentLoaded", function() {
     allClear.addEventListener('click', resetCalculator);
     clear = document.querySelector('.clear');
     clear.addEventListener('click', clearLastEntry);
-
 })
