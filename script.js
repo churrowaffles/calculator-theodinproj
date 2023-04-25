@@ -74,20 +74,34 @@ function evaluateAndDisplay() {
 }
 
 function keyboardTrigger(e) {
-    keyValue = e.key;
-
-    // Allow Enter to act as equal sign
     // Prevent "/" sign default action of opening search box
-    if (keyValue === 'Enter') { 
-        keyValue = '=';
-    } else if (keyValue === '/') {
-        e.preventDefault();
-    }
+    if (e.key === '/') e.preventDefault();
 
-    key = document.querySelector(`.calc input[data-key='${keyValue}']`)
-    if (!key) return;
-    key.click();
+    // If key exists, click it and add CSS animation
+    key = keyExists(e.key)
+    if (key !== false) {
+        key.click()
+        key.classList.add('active');
+    }
 }
+
+
+function keyboardRelease(e) {
+    key = keyExists(e.key)
+    if (key !== false) {
+        key.classList.remove('active');
+    }
+}
+
+
+function keyExists(keyValue) {
+    // Allow Enter to act as equal sign
+    if (keyValue === 'Enter') keyValue = '=';
+    let key = document.querySelector(`.calc input[data-key='${keyValue}']`);
+    return (key ? key : false);
+}
+
+
 
 document.addEventListener("DOMContentLoaded", function() {
     mainDisplay = document.querySelector('.main-display');
@@ -153,6 +167,7 @@ document.addEventListener("DOMContentLoaded", function() {
     clear = document.querySelector('.clear');
     clear.addEventListener('click', clearLastEntry);
 
-    // Keyboard trigger event
+    // Keyboard trigger and release event
     window.addEventListener('keydown', keyboardTrigger);
+    window.addEventListener('keyup', keyboardRelease);
 })
