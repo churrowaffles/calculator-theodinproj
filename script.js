@@ -73,6 +73,21 @@ function evaluateAndDisplay() {
     num2 = '';
 }
 
+function keyboardTrigger(e) {
+    keyValue = e.key;
+
+    // Allow Enter to act as equal sign
+    // Prevent "/" sign default action of opening search box
+    if (keyValue === 'Enter') { 
+        keyValue = '=';
+    } else if (keyValue === '/') {
+        e.preventDefault();
+    }
+
+    key = document.querySelector(`.calc input[data-key='${keyValue}']`)
+    if (!key) return;
+    key.click();
+}
 
 document.addEventListener("DOMContentLoaded", function() {
     mainDisplay = document.querySelector('.main-display');
@@ -83,11 +98,10 @@ document.addEventListener("DOMContentLoaded", function() {
     numbers.forEach(e => {
         e.addEventListener('click', () => {
 
-            if (e.value === '.' && currentEntry.includes('.')) {
             // Stop user from keying more than 2 decimal places,
-                return;
-                
-            } else if (previousEntry in ops && num1 !== '') {
+            if (e.value === '.' && currentEntry.includes('.')) return;
+
+            if (previousEntry in ops && num1 !== '') {
             // Display ongoing operation to user (e.g. 5+)
                 smallDisplay.textContent = num1 + operator;
                 
@@ -138,4 +152,7 @@ document.addEventListener("DOMContentLoaded", function() {
     allClear.addEventListener('click', resetCalculator);
     clear = document.querySelector('.clear');
     clear.addEventListener('click', clearLastEntry);
+
+    // Keyboard trigger event
+    window.addEventListener('keydown', keyboardTrigger);
 })
